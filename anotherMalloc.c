@@ -3,22 +3,22 @@
 #include "mymalloc.h"
 #define MEMORY_SIZE 4096
 
-typedef struct block {
+typedef struct chunk {
     size_t size;
     int free;
-    struct block *next;
-} Block;
+    struct chunk *next;
+} Chunk;
 
 static char memory[MEMORY_SIZE];
-static Block *head = (Block*) memory;
+static Chunk *head = (Chunk*) memory;
 
-    head->size = MEMORY_SIZE - sizeof(Block);
-    head->free = 1;
-    head->next = NULL;
+head->size = MEMORY_SIZE - sizeof(Chunk);
+head->free = 1;
+head->next = NULL;
 
-void split(Block *fitting_slot, size_t size) {
-    Block *new = (void*)((void*)fitting_slot + size + sizeof(Block));
-    new->size = (fitting_slot->size) - size - sizeof(Block);
+void split(Chunk *fitting_slot, size_t size) {
+    Chunk *new = (void*)((void*)fitting_slot + size + sizeof(Chunk));
+    new->size = (fitting_slot->size) - size - sizeof(Chunk);
     new->free = 1;
     new->next = fitting_slot->next;
     fitting_slot->size = size;
@@ -33,10 +33,10 @@ void *mymalloc(size_t size, char* file, int line) {
         return NULL;
     }
 
-    Block *curr = head;
+    Chunk *curr = head;
     while (curr != NULL) {
         if (curr->free && curr->size >= size) {
-            if (curr->size >= size + sizeof(Block) + 1) {
+            if (curr->size >= size + sizeof(Chunk) + 1) {
                 split(curr, size);
             }
             curr->free = 0;
@@ -56,9 +56,9 @@ void myfree(void* ptr, char* file, int line) {
         return;
     }
 
-    Block *curr = (Block*)memory;
-    Block *prev = NULL;
-    while (curr != NULL && curr != (Block*)ptr - 1) {
+    Chunk *curr = (Chunk*)memory;
+    Chunk *prev = NULL;
+    while (curr != NULL && curr != (Chunk*)ptr - 1) {
         prev = curr;
         curr = curr->next;
     }
@@ -76,13 +76,13 @@ void myfree(void* ptr, char* file, int line) {
     curr->free = 1;
 
     if (prev != NULL && prev->free) {
-        prev->size += sizeof(Block) + curr->size;
+        prev->size += sizeof(Chunk) + curr->size;
         prev->next = curr->next;
         curr = prev;
     }
 
     if (curr->next != NULL && curr->next->free) {
-        curr->size += sizeof(Block) + curr->next->size;
+        curr->size += sizeof(Chunk) + curr->next->size;
         curr->next = curr->next->next;
     }
 }
