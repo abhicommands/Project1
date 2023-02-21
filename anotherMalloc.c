@@ -11,14 +11,10 @@ typedef struct block {
 
 static char memory[MEMORY_SIZE];
 static Block *head = (Block*) memory;
-static int initialized = 0;
 
-void initialize() {
     head->size = MEMORY_SIZE - sizeof(Block);
     head->free = 1;
     head->next = NULL;
-    initialized = 1;
-}
 
 void split(Block *fitting_slot, size_t size) {
     Block *new = (void*)((void*)fitting_slot + size + sizeof(Block));
@@ -31,9 +27,6 @@ void split(Block *fitting_slot, size_t size) {
 }
 
 void *mymalloc(size_t size, char* file, int line) {
-    if (!initialized) {
-        initialize();
-    }
 
     if (size <= 0) {
         fprintf(stderr, "Error: Invalid allocation size at %s:%d\n", file, line);
@@ -57,9 +50,6 @@ void *mymalloc(size_t size, char* file, int line) {
 }
 
 void myfree(void* ptr, char* file, int line) {
-    if (!initialized) {
-        initialize();
-    }
 
     if (ptr == NULL) {
         fprintf(stderr, "Error: Attempted to free null pointer at %s:%d\n", file, line);
