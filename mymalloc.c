@@ -2,29 +2,33 @@
 #include <stdbool.h>
 #include "mymalloc.h"
 
-static char memory[4096]; 
-static char *next_allocation = 0;
-
-typedef struct chuck_header{
+typedef struct chunkHeader{
     bool isFree;
     size_t size;
 }chunk_header;
+
+static char memory[4096]; 
+
+static chunk_header* next_allocation = (chunk_header*)(memory);
+next_allocation->isFree = true;
+next_allocation->size = sizeof(memory);
 
 void *mymalloc(size_t size) {
     // size of the chuck must include header
     size += sizeof(chunk_header);
     
-    if (next_allocation + size > sizeof(memory)) {
-        return NULL;  // No space
+    // Find free chunk of sufficient size
+    chunk_header* header = next_allocation;
+    while (header < (chunk_header*)sizeof(memory)) {
+        if (header->isFree && header->size < size) {
+            header->isFree = false;
+            header->size = size;
+            next_allocation = (chunk_header*)((char*)header + header->size);
+            break;
+        } else {
+            header = (chunk_header*)((char*)header + header->size);
+        }
     }
-    
-    // Header creation
-    chunk_header *header = (chunk_header*)(next_allocation);
-    header->size = size;
-    header->isFree = true;
-    
-    // Update next_allocation 
-    next_allocation += size;
     
     // Return pointer to user portion of chunk
     return (void*)(header + 1);
