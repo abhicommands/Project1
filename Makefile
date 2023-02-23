@@ -1,14 +1,14 @@
 CFLAGS = -g -std=c99 -Wall -fsanitize=address,undefined
 CC = gcc
 
-correctness: memgrind.o mymalloc.o 
+performance: memgrind.o mymalloc.o 
 	$(CC) $(CFLAGS) memgrind.o mymalloc.o -o memgrind
 	mv memgrind ./build
 	rm -f *.o
 
-correctnessabhi: memgrindabhi.o mymalloc.o 
-	$(CC) $(CFLAGS) memgrindabhi.o mymalloc.o -o memgrindabhi
-	mv memgrindabhi ./build
+correctness: correctness.o mymalloc.o 
+	$(CC) $(CFLAGS) correctness.o mymalloc.o -o correctness
+	mv correctness ./build
 	rm -f *.o
 
 errcheck: err.o mymalloc.o 
@@ -22,8 +22,8 @@ err.o: err.c mymalloc.h
 memgrind.o: memgrind.c mymalloc.h
 	$(CC) $(CFLAGS) -c memgrind.c
 
-memgrindabhi.o: memgrindabhi.c mymalloc.h
-	$(CC) $(CFLAGS) -c memgrindabhi.c
+correctness.o: correctness.c mymalloc.h
+	$(CC) $(CFLAGS) -c correctness.c
 
 mymalloc.o: mymalloc.c mymalloc.h
 	$(CC) $(CFLAGS) -c mymalloc.c
