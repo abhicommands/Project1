@@ -6,6 +6,11 @@ correctness: memgrind.o mymalloc.o
 	mv memgrind ./build
 	rm -f *.o
 
+correctnessabhi: memgrindabhi.o mymalloc.o 
+	$(CC) $(CFLAGS) memgrindabhi.o mymalloc.o -o memgrindabhi
+	mv memgrindabhi ./build
+	rm -f *.o
+
 errcheck: err.o mymalloc.o 
 	$(CC) $(CFLAGS) err.o mymalloc.o -o err
 	mv err ./build
@@ -16,6 +21,9 @@ err.o: err.c mymalloc.h
 
 memgrind.o: memgrind.c mymalloc.h
 	$(CC) $(CFLAGS) -c memgrind.c
+
+memgrindabhi.o: memgrindabhi.c mymalloc.h
+	$(CC) $(CFLAGS) -c memgrindabhi.c
 
 mymalloc.o: mymalloc.c mymalloc.h
 	$(CC) $(CFLAGS) -c mymalloc.c

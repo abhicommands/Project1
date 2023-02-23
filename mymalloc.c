@@ -43,11 +43,12 @@ void *mymalloc(size_t size, char* file, int line) {
     size = size + sizeof(Block);
     if (size % 8 != 0) {
         size = size + (8 - size % 8);
+        size = size - sizeof(Block);
     }
     Block *curr = head;
     while (curr != NULL) {
         if (curr->free && curr->size >= size) {
-            if (curr->size >= size + sizeof(Block) + 1) {
+            if (curr->size >= size + sizeof(Block)+1) {
                 split(curr, size);
             }
             curr->free = 0;
@@ -102,5 +103,13 @@ void myfree(void* ptr, char* file, int line) {
     if (curr->next != NULL && curr->next->free) {
         curr->size += sizeof(Block) + curr->next->size;
         curr->next = curr->next->next;
+    }
+}
+void printList() {
+    Block *curr = head;
+    while (curr != NULL) {
+        printf("Block at %p, size %d, free %d, next %p", curr, curr->size, curr->free, curr->next);
+        printf("\n");
+        curr = curr->next;
     }
 }
