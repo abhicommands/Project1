@@ -25,6 +25,9 @@ int main(int argc, char **argv)
         free(p);
         free(p);
         break;
+    case 4:
+        p = (int *) malloc(0);
+        break;
     }
     
     return EXIT_SUCCESS;
