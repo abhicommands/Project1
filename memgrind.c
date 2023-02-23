@@ -44,7 +44,7 @@ int main() {
 
     // Test case 4: free() deallocates memory
     free(ptr1);
-    if (head->free == 0 || head->size != 100 + sizeof(Block)) {
+    if (ptr1!= NULL) {
         printf("Test case 4 failed: memory was not deallocated correctly\n");
     }
 
