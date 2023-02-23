@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stddef.h>
 
 #define MEMORY_SIZE 4096
 
@@ -39,7 +40,10 @@ void *mymalloc(size_t size, char* file, int line) {
         fprintf(stderr, "Error: Invalid allocation size at %s:%d\n", file, line);
         return NULL;
     }
-
+    size = size + sizeof(Block);
+    if (size % 8 != 0) {
+        size = size + (8 - size % 8);
+    }
     Block *curr = head;
     while (curr != NULL) {
         if (curr->free && curr->size >= size) {
