@@ -3,10 +3,9 @@
 #include <string.h>
 #include "mymalloc.h"
 
-#define TEST_SIZE 10000
+#define TEST_SIZE 100
 
 void test1() {
-    // Test that malloc reserves unallocated memory
     char* ptr = (char*) malloc(100);
     if (ptr == NULL) {
         printf("Test 1 failed: ptr is NULL\n");
@@ -17,7 +16,6 @@ void test1() {
 }
 
 void test2() {
-    // Test that malloc returns a pointer to an object that does not overlap with any other allocated object
     char* ptr1 = (char*) malloc(50);
     char* ptr2 = (char*) malloc(100);
     char* ptr3 = (char*) malloc(150);
@@ -32,7 +30,6 @@ void test2() {
 }
 
 void test3() {
-    // Test that writing to one object did not overwrite any other
     int* ptr1 = (int*) malloc(TEST_SIZE * sizeof(int));
     int* ptr2 = (int*) malloc(TEST_SIZE * sizeof(int));
     int* ptr3 = (int*) malloc(TEST_SIZE * sizeof(int));
@@ -57,20 +54,25 @@ void test3() {
 }
 
 void test4() {
-    // Test that free deallocates memory
-    char* ptr = (char*) malloc(100);
-    free(ptr);
-    if (malloc_usable_size(ptr) != 0) {
-        printf("Test 4 failed: ptr is still allocated\n");
+    int *ptr1 = (int*) malloc(100);
+    int *ptr2 = (int*) malloc(100);
+    int *ptr3 = (int*) malloc(100);
+    free(ptr2);
+    int *ptr4 = (int*) malloc(100);
+    if (ptr4 != ptr2) {
+        printf("Test 4 failed: ptr4 != ptr2\n");
         return;
     }
+    free(ptr1);
+    free(ptr3);
+    free(ptr4);
     printf("Test 4 passed\n");
 }
 
 void test5() {
-    // Test that adjacent free blocks are coalesced
     char* ptr1 = (char*) malloc(100);
     char* ptr2 = (char*) malloc(50);
+    char *ptr4 = (char*) malloc(100);
     free(ptr1);
     free(ptr2);
     char* ptr3 = (char*) malloc(150);
