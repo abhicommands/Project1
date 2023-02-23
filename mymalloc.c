@@ -78,6 +78,11 @@ void myfree(void* ptr, char* file, int line) {
         return;
     }
 
+    if ((void*)(curr + 1) != ptr) {
+        fprintf(stderr, "Error: Attempted to free non-starting address of a block at %s:%d\n", file, line);
+        return;
+    }
+
     if (curr->free) {
         fprintf(stderr, "Error: Attempted to free already freed pointer at %s:%d\n", file, line);
         return;

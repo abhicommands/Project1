@@ -6,15 +6,21 @@ NetID: acd218
 # Error Handling:
 This library detects the following errors-<br />
     -Calling free() on a pointer that was not obtained by malloc().<br />
-        //Explain the error handling and reporting<br />
+        This error will return "Error: Attempted to free invalid pointer at File Line" <br />
     -Calling free() with an address not at the start of a chunk.<br />
-        //Explain the error handling and reporting<br />
+        This error will return "Error: Attempted to free non-starting address of a block at File Line" <br />
     -Calling free() a second time on the same pointer.<br />
-        //Explain the error handling and reporting<br />
+        This error will return "Error: Attempted to free already freed pointer at File Line" <br />
+    -Calling Malloc with an invalid size. <br />
+        This error will return "Error: Invalid allocation size at File Line" <br />
+    -Calling Malloc with an object that doesn't have anymore space in the array. <br />
+        This error will return "Error: Out of memory at File Line" <br />
 # Correctness Testing:
 To ensure that all the programs run correctly here are the tests we are running-<br />
     -malloc() reserves unallocated memory.<br />
+        To test this case we 
     -When successful, malloc() returns a pointer to an object that does not overlap with any other allocated object.<br />
+        To test this case we
     -A program that allocates several large objects. Once allocation is complete, it fills each object with a distinct byte pattern (e.g., the first object is filled with 1, the second with 2 etc.). Finally, it checks whether each object still contains the written pattern. (That is, writing to one object did not overwrite any other.)<br />
     -free() deallocates memory<br />
     -malloc() and free() arrange so that adjacent free blocks are coalesced<br />
