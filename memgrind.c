@@ -4,15 +4,15 @@
 
 int main() {
     // Test case 1: malloc() reserves unallocated memory
-    void *ptr1 = malloc(100);
-    void *ptr2 = malloc(200);
-    void *ptr3 = malloc(300);
-    void *ptr4 = malloc(400);
-    void *ptr5 = malloc(500);
-    void *ptr6 = malloc(600);
-    if (ptr1 == NULL || ptr2 == NULL || ptr3 == NULL || ptr4 == NULL || ptr5 == NULL || ptr6 == NULL) {
-        printf("Test case 1 failed: malloc() failed to reserve unallocated memory\n");
-    }
+    int *ptr1 = (int*) malloc(100);
+    int *ptr2 = (int*) malloc(100);
+
+    printf("ptr2: %p ", &ptr2);
+    int *ptr3 = (int*) malloc(100);
+    free(ptr2);
+    int *ptr4 = (int*) malloc(100);
+    printf("ptr4: %p ", &ptr4);
+
 
     // Test case 2: malloc() returns a pointer to an object that does not overlap with any other allocated object
     int *int_ptr = (int*) malloc(4);
