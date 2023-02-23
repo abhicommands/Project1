@@ -3,6 +3,7 @@ CC = gcc
 
 all: err.o mymalloc.o 
 	$(CC) $(CFLAGS) err.o mymalloc.o -o err
+	mv err ./build
 	rm -f *.o
 
 err.o: err.c mymalloc.h
@@ -10,6 +11,3 @@ err.o: err.c mymalloc.h
 
 mymalloc.o: mymalloc.c mymalloc.h
 	$(CC) $(CFLAGS) -c mymalloc.c
-
-clean:
-	rm err
