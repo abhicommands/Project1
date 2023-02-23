@@ -35,7 +35,7 @@ void *mymalloc(size_t size, char* file, int line) {
         initialize();
     }
 
-    if (size <= 0) {
+    if (size == 0) {
         fprintf(stderr, "Error: Invalid allocation size at %s:%d\n", file, line);
         return NULL;
     }
@@ -72,14 +72,13 @@ void myfree(void* ptr, char* file, int line) {
         prev = curr;
         curr = curr->next;
     }
-
-    if (curr == NULL) {
-        fprintf(stderr, "Error: Attempted to free invalid pointer at %s:%d\n", file, line);
+    if ((void*)(curr + 1) != ptr) {
+        fprintf(stderr, "Error: Attempted to free non-starting address of a block at %s:%d\n", file, line);
         return;
     }
 
-    if ((void*)(curr + 1) != ptr) {
-        fprintf(stderr, "Error: Attempted to free non-starting address of a block at %s:%d\n", file, line);
+    if (curr == NULL) {
+        fprintf(stderr, "Error: Attempted to free invalid pointer at %s:%d\n", file, line);
         return;
     }
 

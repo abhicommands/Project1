@@ -11,8 +11,9 @@ This library detects the following errors-<br />
         This error will return "Error: Attempted to free non-starting address of a block at File Line" <br />
     -Calling free() a second time on the same pointer.<br />
         This error will return "Error: Attempted to free already freed pointer at File Line" <br />
-    -Calling Malloc with an invalid size. <br />
+    -Calling Malloc with invalid size <br />
         This error will return "Error: Invalid allocation size at File Line" <br />
+        In addition we cannot check if the size is less than 0 because size_t is a unsigned unit hence we only check if size == 0<br />
     -Calling Malloc with an object that doesn't have anymore space in the array. <br />
         This error will return "Error: Out of memory at File Line" <br />
 # Correctness Testing:

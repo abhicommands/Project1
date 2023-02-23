@@ -26,7 +26,7 @@ int main(int argc, char **argv)
         free(p);
         break;
     case 4:
-        p = (int *) malloc(0);
+        p = (int *) malloc(-1);
         break;
     }
     
