@@ -39,7 +39,7 @@ In the memgrind file we test the performance and the runtimes of the library. He
         •Allocating a 1-byte chunk and storing the pointer in an array<br />
         •Deallocating one of the chunks in the array (if any)<br />
     Repeat until you have called malloc() 120 times, then free all remaining allocated chunks.<br />
-    - in the 4 test we decided to test the coalescing and how good it is, so we tried to performance test and brute force the time for coalescing. 
+    - in the 4 test we decided to test the coalescing and how good it is, so we tried to performance test and brute force the time for coalescing. <br/>
     - in test 5, we first allocate half the test size then we free half, then we again allocate half the test size and then free the rest. This way we can test if the program is not biased in the order we free and malloc. 
 <br />
 Each of these tests are run 50 times in order to find the average performance.
