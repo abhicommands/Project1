@@ -3,7 +3,7 @@ NetID: aa2372
 # Akshith Dandemraju
 NetID: acd218
 
-#Implimentation:
+# Implimentation:
 
 # Error Handling:
 This library detects the following errors-<br />
