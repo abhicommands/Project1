@@ -4,13 +4,13 @@ NetID: aa2372
 NetID: acd218
 
 # Implimentation:
-
+Our implementation requires that a block contain 4 bytes of data for integer stating if its a true or a false, 1 = free, and 0 is not free. The next 8 bytes stores a unsigned size_t that stores the size of the payload. The next 12 bytes will store the data of the next header. This means that any header will have 24 bytes of just data regarding the chunk header and the rest will be aligned properly with 8 bytes but contain the payload. This means in the performance testing for test 2, we can store 128 test size, if we go higher than 128 test size it should show that the memory can't handle that much extra memory and return the data to the user. Hence 128 is the max for our implementation. 
 # Error Handling:
 This library detects the following errors-<br />
     -Calling free() on a pointer that was not obtained by malloc().<br />
         This error will return "Error: Attempted to free invalid pointer at File Line" <br />
     -Calling free() with an address not at the start of a chunk.<br />
-        This error will return "Error: Attempted to free non-starting address of a block at File Line" <br />
+        This error will return "Error: Attempted to free invalid pointer at  File Line" <br />
     -Calling free() a second time on the same pointer.<br />
         This error will return "Error: Attempted to free already freed pointer at File Line" <br />
     -Calling Malloc with invalid size <br />
@@ -39,6 +39,7 @@ In the memgrind file we test the performance and the runtimes of the library. He
         •Allocating a 1-byte chunk and storing the pointer in an array<br />
         •Deallocating one of the chunks in the array (if any)<br />
     Repeat until you have called malloc() 120 times, then free all remaining allocated chunks.<br />
-    -two more stress tests of your design<br />
+    - in the 4 test we decided to test the coalescing and how good it is, so we tried to performance test and brute force the time for coalescing. 
+    - in test 5, we first allocate half the test size then we free half, then we again allocate half the test size and then free the rest. This way we can test if the program is not biased in the order we free and malloc. 
 <br />
 Each of these tests are run 50 times in order to find the average performance.

@@ -83,12 +83,63 @@ void test3()
     }
     printf("Average test 3 runtime after 50 repeats : %f seconds\n", total/TEST_REPEATS);
 }
-
+void test4() {
+    int i;
+    double total = 0;
+    for (i = 0; i < TEST_REPEATS; i++) {
+        clock_t start = clock();
+        
+        int *ptr1 = (int*) malloc(100);
+        int *ptr2 = (int*) malloc(100);
+        int *ptr3 = (int*) malloc(100);
+        free(ptr2);
+        int *ptr4 = (int*) malloc(100);
+        free(ptr1);
+        free(ptr3);
+        free(ptr4);
+        
+        clock_t end = clock();
+        double elapsed = ((double)(end - start)) / CLOCKS_PER_SEC;
+        total += elapsed;
+    }
+    printf("Average test 4 runtime after 50 repeats : %f seconds\n", total/TEST_REPEATS);
+}
+void test5() {
+    int i, j;
+    double total = 0;
+    for (i = 0; i < TEST_REPEATS; i++)
+    {
+        clock_t start = clock();
+        char *ptrs[TEST_SIZE];
+        for (j = 0; j < TEST_SIZE/2; j++)
+        {
+            ptrs[j] = (char *)malloc(1);
+        }
+        for (j = 0; j < TEST_SIZE/2; j++)
+        {
+            free(ptrs[j]);
+        }
+        for (j = 0; j < TEST_SIZE; j++)
+        {
+            ptrs[j] = (char *)malloc(1);
+        }
+        for (j = 0; j < TEST_SIZE; j++)
+        {
+            free(ptrs[j]);
+        }
+        clock_t end = clock();
+        double elapsed = ((double)(end - start)) / CLOCKS_PER_SEC;
+        total += elapsed;
+    }
+    printf("Average test 5 runtime after 50 repeats : %f seconds\n", total/TEST_REPEATS);
+}
 int main()
 {
     srand(time(NULL));
     test1();
     test2();
     test3();
+    test4();
+    test5();
     return 0;
 }

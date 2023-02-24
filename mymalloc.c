@@ -77,16 +77,14 @@ void myfree(void* ptr, char* file, int line) {
         prev = curr;
         curr = curr->next;
     }
-    if ((void*)(curr + 1) != ptr) {
-        fprintf(stderr, "Error: Attempted to free non-starting address of a chunk at %s:%d\n", file, line);
-        return;
-    }
-
-    if (curr == NULL) {
+    if(curr == NULL) {
         fprintf(stderr, "Error: Attempted to free invalid pointer at %s:%d\n", file, line);
         return;
     }
-
+    if(curr + 1 != ptr) {
+        fprintf(stderr, "Error: Attempted to free non-starting pointer at %s:%d\n", file, line);
+        return;
+    }
     if (curr->free) {
         fprintf(stderr, "Error: Attempted to free already freed pointer at %s:%d\n", file, line);
         return;
