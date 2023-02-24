@@ -4,26 +4,26 @@
 
 #define MEMORY_SIZE 4096
 
-typedef struct block {
+typedef struct chunk {
     size_t size;
     int free;
-    struct block *next;
-} Block;
+    struct chunk *next;
+} Chunk;
 
 static char memory[MEMORY_SIZE];
-static Block *head = (Block*) memory;
+static Chunk *head = (Chunk*) memory;
 static int initialized = 0;
 
 void initialize() {
-    head->size = MEMORY_SIZE - sizeof(Block);
+    head->size = MEMORY_SIZE - sizeof(Chunk);
     head->free = 1;
     head->next = NULL;
     initialized = 1;
 }
 
-void split(Block *fitting_slot, size_t size) {
-    Block *new = (void*)((void*)fitting_slot + size + sizeof(Block));
-    new->size = (fitting_slot->size) - size - sizeof(Block);
+void split(Chunk *fitting_slot, size_t size) {
+    Chunk *new = (void*)((void*)fitting_slot + size + sizeof(Chunk));
+    new->size = (fitting_slot->size) - size - sizeof(Chunk);
     new->free = 1;
     new->next = fitting_slot->next;
     fitting_slot->size = size;
@@ -40,15 +40,15 @@ void *mymalloc(size_t size, char* file, int line) {
         fprintf(stderr, "Error: Invalid allocation size at %s:%d\n", file, line);
         return NULL;
     }
-    size = size + sizeof(Block);
+    size = size + sizeof(Chunk);
     if (size % 8 != 0) {
         size = size + (8 - size % 8);
-        size = size - sizeof(Block);
+        size = size - sizeof(Chunk);
     }
-    Block *curr = head;
+    Chunk *curr = head;
     while (curr != NULL) {
         if (curr->free && curr->size >= size) {
-            if (curr->size >= size + sizeof(Block)+1) {
+            if (curr->size >= size + sizeof(Chunk)+1) {
                 split(curr, size);
             }
             curr->free = 0;
@@ -71,14 +71,14 @@ void myfree(void* ptr, char* file, int line) {
         return;
     }
 
-    Block *curr = (Block*)memory;
-    Block *prev = NULL;
-    while (curr != NULL && curr != (Block*)ptr - 1) {
+    Chunk *curr = (Chunk*)memory;
+    Chunk *prev = NULL;
+    while (curr != NULL && curr != (Chunk*)ptr - 1) {
         prev = curr;
         curr = curr->next;
     }
     if ((void*)(curr + 1) != ptr) {
-        fprintf(stderr, "Error: Attempted to free non-starting address of a block at %s:%d\n", file, line);
+        fprintf(stderr, "Error: Attempted to free non-starting address of a chunk at %s:%d\n", file, line);
         return;
     }
 
@@ -95,22 +95,22 @@ void myfree(void* ptr, char* file, int line) {
     curr->free = 1;
 
     if (prev != NULL && prev->free) {
-        prev->size += sizeof(Block) + curr->size;
+        prev->size += sizeof(Chunk) + curr->size;
         prev->next = curr->next;
         curr = prev;
     }
 
     if (curr->next != NULL && curr->next->free) {
-        curr->size += sizeof(Block) + curr->next->size;
+        curr->size += sizeof(Chunk) + curr->next->size;
         curr->next = curr->next->next;
     }
 }
 /*
 
 void printList() {
-    Block *curr = head;
+    Chunk *curr = head;
     while (curr != NULL) {
-        printf("Block at %p, size %d, free %d, next %p", curr, curr->size, curr->free, curr->next);
+        printf("Chunk at %p, size %d, free %d, next %p", curr, curr->size, curr->free, curr->next);
         printf("\n");
         curr = curr->next;
     }
