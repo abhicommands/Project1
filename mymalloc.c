@@ -105,6 +105,8 @@ void myfree(void* ptr, char* file, int line) {
         curr->next = curr->next->next;
     }
 }
+/*
+
 void printList() {
     Block *curr = head;
     while (curr != NULL) {
@@ -113,3 +115,5 @@ void printList() {
         curr = curr->next;
     }
 }
+This is the output of the entire mempory allocation process: which is important because we used this to debug our code.
+*/
